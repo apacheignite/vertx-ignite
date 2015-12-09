@@ -2,13 +2,12 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-                            http://www.springframework.org/schema/beans/spring-beans.xsd
-                            http://www.springframework.org/schema/util
-                            http://www.springframework.org/schema/util/spring-util.xsd">
+                            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean class="org.apache.ignite.configuration.IgniteConfiguration">
+
+    <property name="localHost" value="127.0.0.1"/>
 
     <!-- Explicitly configure TCP discovery SPI to provide list of initial nodes. -->
     <property name="discoverySpi">
@@ -34,13 +33,13 @@
 
     <!-- Template cache configuration. -->
     <property name="cacheConfiguration">
-      <bean class="org.apache.ignite.configuration.CacheConfiguration">
-        <property name="name">
-          <util:constant static-field="io.vertx.spi.cluster.ignite.IgniteClusterManager.VERTX_CACHE_TEMPLATE_NAME"/>
-        </property>
-        <property name="cacheMode" value="PARTITIONED"/>
-        <property name="backups" value="1"/>
-      </bean>
+      <list>
+        <bean class="org.apache.ignite.configuration.CacheConfiguration">
+          <property name="name" value="*"/>
+          <property name="cacheMode" value="PARTITIONED"/>
+          <property name="backups" value="1"/>
+        </bean>
+      </list>
     </property>
 
     <!-- Logging configuration. -->
@@ -55,11 +54,5 @@
     </property>
 
     <property name="metricsLogFrequency" value="0"/>
-
-    <property name="marshaller">
-      <bean class="org.apache.ignite.marshaller.optimized.OptimizedMarshaller">
-        <property name="requireSerializable" value="false"/>
-      </bean>
-    </property>
   </bean>
 </beans>

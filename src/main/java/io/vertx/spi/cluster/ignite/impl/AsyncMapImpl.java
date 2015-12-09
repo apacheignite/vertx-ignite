@@ -22,19 +22,17 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.shareddata.AsyncMap;
-import org.apache.ignite.IgniteCache;
-import org.apache.ignite.IgniteException;
-import org.apache.ignite.lang.IgniteFuture;
-
 import java.util.function.Consumer;
+import org.apache.ignite.IgniteCache;
+import org.apache.ignite.lang.IgniteFuture;
 
 /**
  * Async wrapper for {@link MapImpl}.
  */
 public class AsyncMapImpl<K, V> implements AsyncMap<K, V> {
 
-  private final MapImpl<K, V> map;
   private final Vertx vertx;
+  private final IgniteCache<K, V> cache;
 
   /**
    * Constructor.
@@ -42,9 +40,9 @@ public class AsyncMapImpl<K, V> implements AsyncMap<K, V> {
    * @param map {@link MapImpl} instance.
    * @param vertx {@link Vertx} instance.
    */
-  public AsyncMapImpl(MapImpl<K, V> map, Vertx vertx) {
-    this.map = map;
+  public AsyncMapImpl(IgniteCache<K, V> cache, Vertx vertx) {
     this.vertx = vertx;
+    this.cache = cache;
   }
 
   @Override
@@ -109,7 +107,7 @@ public class AsyncMapImpl<K, V> implements AsyncMap<K, V> {
   private <T> void executeWithTimeout(Consumer<IgniteCache<K, V>> cacheOp,
                                       Handler<AsyncResult<T>> handler, long timeout) {
     try {
-      IgniteCache<K, V> cache = map.getCache().withAsync();
+      IgniteCache<K, V> cache = this.cache.withAsync();
       cacheOp.accept(cache);
       IgniteFuture<T> future = cache.future();
 

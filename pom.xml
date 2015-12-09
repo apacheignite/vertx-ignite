@@ -11,13 +11,13 @@
   </parent>
 
   <artifactId>vertx-ignite</artifactId>
-  <version>3.1.0-SNAPSHOT</version>
+  <version>3.2.0-SNAPSHOT</version>
 
   <name>Vert.x Ignite Cluster Manager</name>
 
   <properties>
-    <stack.version>3.1.0-SNAPSHOT</stack.version>
-    <ignite.version>1.4.1-SNAPSHOT</ignite.version>
+    <stack.version>3.2.0-SNAPSHOT</stack.version>
+    <ignite.version>1.5.0-b2-SNAPSHOT</ignite.version>
   </properties>
 
   <dependencyManagement>

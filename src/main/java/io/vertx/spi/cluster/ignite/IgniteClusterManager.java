@@ -69,14 +69,9 @@ public class IgniteClusterManager implements ClusterManager {
   // User defined Ignite configuration file
   private static final String CONFIG_FILE = "ignite.xml";
 
-  private static final String VERTX_CACHE_PREFIX = "vertx.cache.";
-
-  @SuppressWarnings("unused")
-  public static final String VERTX_CACHE_TEMPLATE_NAME = VERTX_CACHE_PREFIX + '*';
+  public static final String VERTX_CACHE_TEMPLATE_NAME = "*";
 
   private static final String VERTX_NODE_PREFIX = "vertx.ignite.node.";
-
-  private static final String VERTX_LOCK_PREFIX = "vertx.lock.";
 
   private Vertx vertx;
 
@@ -130,7 +125,7 @@ public class IgniteClusterManager implements ClusterManager {
   @Override
   public <K, V> void getAsyncMap(String name, Handler<AsyncResult<AsyncMap<K, V>>> handler) {
     vertx.executeBlocking(
-      fut -> fut.complete(new AsyncMapImpl<>(new MapImpl<>(getCache(name)), vertx)), handler
+      fut -> fut.complete(new AsyncMapImpl<>(getCache(name), vertx)), handler
     );
   }
 
@@ -284,11 +279,11 @@ public class IgniteClusterManager implements ClusterManager {
   }
 
   private <K, V> IgniteCache<K, V> getCache(String name) {
-    return ignite.getOrCreateCache(VERTX_CACHE_PREFIX + name);
+    return ignite.getOrCreateCache(name);
   }
 
   private <T> IgniteQueue<T> getQueue(String name) {
-    return ignite.queue(VERTX_LOCK_PREFIX + name, 1, collectionCfg);
+    return ignite.queue(name, 1, collectionCfg);
   }
 
   private static String nodeId(ClusterNode node) {
