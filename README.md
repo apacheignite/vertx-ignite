@@ -1,6 +1,6 @@
 # Apache Ignite Cluster Manager for Vert.x
 
-This is a cluster manager implementation for Vert.x that uses [Apache Ignite](http://ignite.incubator.apache.org/index.html).
+This is a cluster manager implementation for Vert.x that uses [Apache Ignite](http://ignite.apache.org/index.html).
 
 Vert.x cluster manager is pluggable component. So you can replace default Vert.x cluster manager by this implementation.
 
@@ -59,11 +59,13 @@ In order to build this cluster manager from sources just use the following comma
 mvn clean package -DskipTests
 ```
 
-If you want to build this cluster manager with specific Apache Ignite version:
+If you want to build this cluster manager with specific Apache Ignite version (1.5.0 or later):
 
 ```
 mvn clean package -Dignite.version=${version} -DskipTests
 ```
+
+
 
 ## Configuring cluster manager
 
@@ -74,7 +76,7 @@ The cluster manager is configured by a file `default-ignite.xml` which is packag
 If you want to override this configuration you can provide `ignite.xml` file on your classpath and this will be used instead.
 
 The xml file is a Ignite configuration file and is described in details in
-[Apache Ignite](http://ignite.incubator.apache.org/index.html) documentation.
+[Apache Ignite documentation](https://apacheignite.readme.io/docs).
 
 ### Configuring programmatically
 
