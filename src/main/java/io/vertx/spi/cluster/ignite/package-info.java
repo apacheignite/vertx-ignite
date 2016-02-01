@@ -27,7 +27,7 @@
  * addresses)
  * * Distributed Map support
  * * Distributed Locks
- * *  Distributed Counters
+ * * Distributed Counters
  *
  * Cluster managers *do not* handle the event bus inter-node transport, this is done directly by Vert.x with TCP
  * connections.
@@ -45,7 +45,7 @@
  *
  * ### Using Vert.x from command line
  *
- * `vertx-ignite-${maven.version}.jar` should be in the `lib` directory of the Vert.x installation.
+ * `vertx-ignite-3.2.0.jar` should be in the `lib` directory of the Vert.x installation.
  *
  * ### Using Vert.x in Maven or Gradle project
  *
@@ -56,9 +56,9 @@
  * [source,xml,subs="+attributes"]
  * ----
  * <dependency>
- *   <groupId>${maven.groupId}</groupId>
- *   <artifactId>${maven.artifactId}</artifactId>
- *   <version>${maven.version}</version>
+ *   <groupId>io.vertx</groupId>
+ *   <artifactId>vertx-ignite</artifactId>
+ *   <version>3.2.0</version>
  * </dependency>
  * ----
  *
@@ -66,7 +66,7 @@
  *
  * [source,groovy,subs="+attributes"]
  * ----
- * compile '${maven.groupId}:${maven.artifactId}:${maven.version}'
+ * compile 'io.vertx:vertx-ignite:3.2.0'
  * ----
  *
  * ### Programmatically specifying cluster manager
@@ -74,9 +74,18 @@
  * You can also specify the cluster manager programmatically. In order to do this just specify it on the options
  * when you are creating your Vert.x instance, for example:
  *
- * [source,$lang]
+ * [source,java]
  * ----
- * {@link examples.Examples#example1()}
+ * ClusterManager clusterManager = new IgniteClusterManager();
+ *
+ * VertxOptions options = new VertxOptions().setClusterManager(clusterManager);
+ * Vertx.clusteredVertx(options, res -> {
+ *   if (res.succeeded()) {
+ *     Vertx vertx = res.result();
+ *   } else {
+ *     // failed!
+ *   }
+ * });
  * ----
  *
  * == Configuring cluster manager
@@ -95,9 +104,21 @@
  *
  * You can also specify configuration programmatically:
  *
- * [source,$lang]
+ * [source,java]
  * ----
- * {@link examples.Examples#example2()}
+ * IgniteConfiguration cfg = new IgniteConfiguration();
+ * // Configuration code (omitted)
+ *
+ * ClusterManager clusterManager = new IgniteClusterManager(cfg);
+ *
+ * VertxOptions options = new VertxOptions().setClusterManager(clusterManager);
+ * Vertx.clusteredVertx(options, res -> {
+ *   if (res.succeeded()) {
+ *     Vertx vertx = res.result();
+ *   } else {
+ *     // failed!
+ *   }
+ * });
  * ----
  *
  * === Discovery and network transport configuration
@@ -130,8 +151,68 @@
  *
  * Please google for more information.
  *
+ * === Using wrong network interface
+ *
+ * If you have more than one network interface on your machine (and this can also be the case if you are running
+ * VPN software on your machine), then Apache Ignite may be using the wrong one.
+ *
+ * To tell Ignite to use a specific interface you can provide the IP address of the interface to the
+ * bean of `IgniteConfiguration` type using `localHost` property. For example:
+ *
+ * ----
+ * <bean class="org.apache.ignite.configuration.IgniteConfiguration">
+ *   <property name="localHost" value="192.168.1.20"/>
+ * </bean>
+ * ----
+ *
+ * When running Vert.x is in clustered mode, you should also make sure that Vert.x knows about the correct interface.
+ * When running at the command line this is done by specifying the `cluster-host` option:
+ *
+ * ----
+ * vertx run myverticle.js -cluster -cluster-host your-ip-address
+ * ----
+ *
+ * Where `your-ip-address` is the same IP address you specified in the Apache Ignite configuration.
+ *
+ * If using Vert.x programmatically you can specify this using `link:../../apidocs/io/vertx/core/VertxOptions.html#setClusterHost-java.lang.String-[setClusterHost]`.
+ *
+ * === Using a VPN
+ *
+ * This is a variation of the above case. VPN software often works by creating a virtual network interface which often
+ * doesn't support multicast. If you have a VPN running and you do not specify the correct interface to use in both the
+ * Ignite configuration and to Vert.x then the VPN interface may be chosen instead of the correct interface.
+ *
+ * So, if you have a VPN running you may have to configure both the Ignite and Vert.x to use the correct interface as
+ * described in the previous section.
+ *
+ * === When multicast is not available
+ *
+ * In some cases you may not be able to use multicast as it might not be available in your environment. In that case
+ * you should configure another transport using corresponding IP finder, e.g. `TcpDiscoveryVmIpFinder` to use TCP sockets,
+ * or `TcpDiscoveryS3IpFinder` to use Amazon S3.
+ *
+ * For more information on available Ignite transports and how to configure them please consult the
+ * https://apacheignite.readme.io/docs/clustering[Ignite Clustering] documentation.
+ *
+ * === Enabling logging
+ *
+ * When trouble-shooting clustering issues with Apache Ignite it's often useful to get some logging output from Ignite
+ * to see if it's forming a cluster properly. You can do this (when using the default JUL logging) by adding a file
+ * called `vertx-default-jul-logging.properties` on your classpath. This is a standard java.util.loging (JUL)
+ * configuration file. Inside it set:
+ *
+ * ----
+ * org.apache.ignite.level=INFO
+ * ----
+ *
+ * and also
+ *
+ * ----
+ * java.util.logging.ConsoleHandler.level=INFO
+ * java.util.logging.FileHandler.level=INFO
+ * ----
  */
-@Document(fileName = "index.ad")
+@Document(fileName = "index.adoc")
 package io.vertx.spi.cluster.ignite;
 
 import io.vertx.docgen.Document;
