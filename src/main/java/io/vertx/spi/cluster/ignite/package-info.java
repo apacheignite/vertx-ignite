@@ -35,7 +35,7 @@
  * Vert.x cluster manager is a pluggable component, so you can pick the one you want, or the one that is the most
  * adapted to your environment. So you can replace default Vert.x cluster manager by this implementation.
  *
- * == Using this cluster manager
+ * == Using Ignite cluster manager
  *
  * If the jar is on your classpath then Vert.x will automatically detect this and use it as the cluster manager.
  * Please make sure you don’t have any other cluster managers on your classpath or Vert.x might choose the wrong one.
@@ -196,7 +196,7 @@
  *
  * === Enabling logging
  *
- * When trouble-shooting clustering issues with Apache Ignite it's often useful to get some logging output from Ignite
+ * When trouble-shooting clustering issues it's often useful to get some logging output from Ignite
  * to see if it's forming a cluster properly. You can do this (when using the default JUL logging) by adding a file
  * called `vertx-default-jul-logging.properties` on your classpath. This is a standard java.util.loging (JUL)
  * configuration file. Inside it set:
