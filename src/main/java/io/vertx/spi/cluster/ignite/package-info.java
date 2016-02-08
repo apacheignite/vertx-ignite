@@ -174,7 +174,7 @@
  *
  * Where `your-ip-address` is the same IP address you specified in the Apache Ignite configuration.
  *
- * If using Vert.x programmatically you can specify this using `link:../../apidocs/io/vertx/core/VertxOptions.html#setClusterHost-java.lang.String-[setClusterHost]`.
+ * If using Vert.x programmatically you can specify this using {@link io.vertx.core.VertxOptions#setClusterHost(java.lang.String)}.
  *
  * === Using a VPN
  *
