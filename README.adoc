@@ -1,5 +1,6 @@
 *NOTE:* Project is part of Vert.x stack now and code base is moved to
-https://github.com/vert-x3/vertx-ignite[vertx-ignite] repository.
+https://github.com/vert-x3/vertx-ignite[vertx-ignite] repository under https://github.com/vert-x3[vert-x3]
+organization.
 
 = Apache Ignite Cluster Manager
 
